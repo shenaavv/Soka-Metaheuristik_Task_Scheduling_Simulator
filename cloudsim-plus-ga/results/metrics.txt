@@ -1,0 +1,8 @@
+Cloud Task Scheduling - Genetic Algorithm
+==========================================
+Fitness: 0.789463
+Makespan: 577.150000 s
+Energy Consumption: 277084.800000 J
+Execution Time: 203520.090433 s
+Average CPU Utilization: 1033.39%
+Throughput: 1.386121 task/s

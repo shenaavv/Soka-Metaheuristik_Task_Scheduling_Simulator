@@ -1,0 +1,7 @@
+Cloud Task Scheduling - FCFS Baseline
+=====================================
+Makespan: 556.905000 s
+Energy Consumption: 267367.200000 J
+Execution Time: 5302.535667 s
+Average CPU Utilization: 32.79%
+Throughput: 1.436511 task/s

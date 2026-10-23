@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450.0" y="22" text-anchor="middle" font-size="18">Throughput (task/s) vs jumlah task</text>
+<line x1="80" y1="35" x2="80" y2="430" stroke="black"/>
+<line x1="80" y1="430" x2="870" y2="430" stroke="black"/>
+<text x="15" y="250.0" transform="rotate(-90 15 250.0)" font-size="13">Throughput (task/s)</text>
+<text x="450.0" y="485" text-anchor="middle" font-size="13">Jumlah task</text>
+<text x="80.0" y="450" text-anchor="middle" font-size="11">100</text>
+<text x="167.77777777777777" y="450" text-anchor="middle" font-size="11">200</text>
+<text x="255.55555555555554" y="450" text-anchor="middle" font-size="11">300</text>
+<text x="343.3333333333333" y="450" text-anchor="middle" font-size="11">400</text>
+<text x="431.1111111111111" y="450" text-anchor="middle" font-size="11">500</text>
+<text x="518.8888888888889" y="450" text-anchor="middle" font-size="11">600</text>
+<text x="606.6666666666666" y="450" text-anchor="middle" font-size="11">700</text>
+<text x="694.4444444444445" y="450" text-anchor="middle" font-size="11">800</text>
+<text x="782.2222222222222" y="450" text-anchor="middle" font-size="11">900</text>
+<text x="870.0" y="450" text-anchor="middle" font-size="11">1000</text>
+<polyline points="80.0,325.9904185853905 167.77777777777777,282.02870456475296 255.55555555555554,208.55542914363176 343.3333333333333,196.50043178048668 431.1111111111111,101.87655334563141 518.8888888888889,77.03362116294318 606.6666666666666,65.01937421047657 694.4444444444445,35.0" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="770" y="55" fill="#1f77b4" font-size="12">GA</text>
+<polyline points="80.0,430.0 167.77777777777777,430.0 255.55555555555554,430.0 343.3333333333333,430.0 431.1111111111111,430.0 518.8888888888889,430.0 606.6666666666666,430.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="770" y="95" fill="#d62728" font-size="12">MBA</text>
+</svg>

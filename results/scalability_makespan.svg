@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500">
+<rect width="100%" height="100%" fill="white"/>
+<text x="450.0" y="22" text-anchor="middle" font-size="18">Makespan (s) vs jumlah task</text>
+<line x1="80" y1="35" x2="80" y2="430" stroke="black"/>
+<line x1="80" y1="430" x2="870" y2="430" stroke="black"/>
+<text x="15" y="250.0" transform="rotate(-90 15 250.0)" font-size="13">Makespan (s)</text>
+<text x="450.0" y="485" text-anchor="middle" font-size="13">Jumlah task</text>
+<text x="80.0" y="450" text-anchor="middle" font-size="11">100</text>
+<text x="167.77777777777777" y="450" text-anchor="middle" font-size="11">200</text>
+<text x="255.55555555555554" y="450" text-anchor="middle" font-size="11">300</text>
+<text x="343.3333333333333" y="450" text-anchor="middle" font-size="11">400</text>
+<text x="431.1111111111111" y="450" text-anchor="middle" font-size="11">500</text>
+<text x="518.8888888888889" y="450" text-anchor="middle" font-size="11">600</text>
+<text x="606.6666666666666" y="450" text-anchor="middle" font-size="11">700</text>
+<text x="694.4444444444445" y="450" text-anchor="middle" font-size="11">800</text>
+<text x="782.2222222222222" y="450" text-anchor="middle" font-size="11">900</text>
+<text x="870.0" y="450" text-anchor="middle" font-size="11">1000</text>
+<polyline points="80.0,429.9999999100994 167.77777777777777,429.9999998736171 255.55555555555554,429.9999998733248 343.3333333333333,429.9999998398195 431.1111111111111,429.9999998575152 518.8888888888889,429.9999998410525 606.6666666666666,429.9999998206655 694.4444444444445,429.9999998106225" fill="none" stroke="#1f77b4" stroke-width="2"/>
+<text x="770" y="55" fill="#1f77b4" font-size="12">GA</text>
+<polyline points="80.0,423.49319319800514 167.77777777777777,400.69414936320817 255.55555555555554,366.0859747601007 343.3333333333333,318.7774792169168 431.1111111111111,260.9299912852117 518.8888888888889,165.33789633623357 606.6666666666666,35.0" fill="none" stroke="#d62728" stroke-width="2"/>
+<text x="770" y="95" fill="#d62728" font-size="12">MBA</text>
+<polyline points="80.0,429.99999997393206 167.77777777777777,429.99999995191814 255.55555555555554,429.99999993190414 343.3333333333333,429.99999991614754 431.1111111111111,429.9999998876351 518.8888888888889,429.9999998628321 606.6666666666666,429.99999983812495 694.4444444444445,429.9999998172654" fill="none" stroke="#2ca02c" stroke-width="2"/>
+<text x="770" y="75" fill="#2ca02c" font-size="12">FCFS</text>
+</svg>
