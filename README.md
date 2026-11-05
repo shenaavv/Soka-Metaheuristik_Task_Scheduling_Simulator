@@ -46,6 +46,37 @@ bias; dataset asli MBA disimpan sebagai
         └── MBACloudTaskScheduling.java
 ```
 
+## Modul Gabungan `cloudsim-plus-mba-ga`
+
+Selain dua project asli, tersedia struktur gabungan baru:
+
+```text
+cloudsim-plus-mba-ga/
+└── src/main/java/id/its/cloudtaskscheduling/
+    ├── mba/
+    │   └── MBAScheduler.java
+    ├── ga/
+    │   └── GAScheduler.java
+    └── MainSimulation.java
+```
+
+`GAScheduler.java` dan `MBAScheduler.java` mempertahankan source algoritma
+masing-masing dalam package terpisah. `MainSimulation.java` adalah entry point
+gabungan. Karena GA menggunakan CloudSim Plus 7.3.3 dan MBA menggunakan
+CloudSim Plus 8.0.0 dengan package API berbeda, entry point gabungan menjalankan
+keduanya sebagai proses Maven terisolasi. Cara ini mencegah konflik classpath
+ketika kedua algoritma dijalankan dari satu project.
+
+Jalankan modul gabungan dari root:
+
+```bash
+cd cloudsim-plus-mba-ga
+mvn clean compile exec:java
+```
+
+Output masing-masing algoritma tetap ditulis ke folder `results/` project
+aslinya sehingga hasil GA dan MBA tidak saling menimpa.
+
 Folder `results/` berisi mapping, metrik, log eksekusi, dan grafik dari arsip
 asal. Folder `target/` akan dibuat ulang oleh Maven bila belum tersedia.
 
@@ -66,7 +97,7 @@ Java masing-masing.
 
 ## Persyaratan dan Cara Menjalankan
 
-- JDK 17 atau lebih baru
+- JDK 25 LTS atau lebih baru
 - Apache Maven 3.6 atau lebih baru
 - Bash, Git Bash, atau WSL
 - Python 3.8+ dan `requirements.txt` hanya untuk eksperimen skalabilitas MBA
