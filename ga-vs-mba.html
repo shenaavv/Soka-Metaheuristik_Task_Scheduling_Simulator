@@ -22,7 +22,7 @@ main{max-width:1040px;margin:0 auto;padding:32px clamp(16px,4vw,40px) 110px}
 h2{font:800 clamp(28px,4.6vw,44px)/1.1 'Bricolage Grotesque';margin:0 0 10px;letter-spacing:-.02em;background:linear-gradient(100deg,var(--fg) 25%,var(--ga) 60%,#7c5cff);-webkit-background-clip:text;background-clip:text;color:transparent}h2.tg{background-image:linear-gradient(100deg,var(--ga),#3b82f6 60%,#7c5cff);color:transparent}h2.tm{background-image:linear-gradient(100deg,var(--mba),#ef4565 70%,#c026d3);color:transparent}h3{font:700 18px 'Bricolage Grotesque';margin:28px 0 10px}
 .tg{color:var(--ga)}.tm{color:var(--mba)}.lead{color:var(--mu);max-width:640px;font-size:17px}
 .hero{position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--ga) 26%,var(--pn)),var(--pn) 48%,color-mix(in srgb,var(--mba) 26%,var(--pn)));border:1px solid var(--ln);margin-bottom:22px;box-shadow:0 20px 60px -20px color-mix(in srgb,#7c5cff 50%,transparent)}
-.hero canvas{border:0;border-radius:0;background:transparent}.hero .tx{position:absolute;left:clamp(16px,4vw,40px);top:50%;transform:translateY(-50%);max-width:min(560px,70%)}
+.hero canvas{border:0;border-radius:0;background:transparent}.hero .tx{position:absolute;z-index:3;left:clamp(16px,4vw,40px);top:50%;transform:translateY(-50%);max-width:min(560px,58%)}
 .hero h2{font-size:clamp(26px,5vw,52px);margin:0 0 8px}.hero .lead{margin:0;font-size:15px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:14px 0}
 .c{background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:16px;transition:border-color .3s,box-shadow .3s,background .3s}.c b{display:block;margin-bottom:4px}
@@ -45,19 +45,25 @@ canvas{width:100%;height:auto;display:block;background:var(--pn);border:1px soli
 .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:5px 12px;border-radius:99px;background:linear-gradient(90deg,color-mix(in srgb,var(--ga) 20%,var(--cd)),color-mix(in srgb,var(--mba) 20%,var(--cd)));font:13px 'JetBrains Mono',monospace}.t{background:linear-gradient(135deg,var(--pn),color-mix(in srgb,#7c5cff 16%,var(--pn)))}
 .mt{height:6px;background:var(--cd);border-radius:9px;overflow:hidden}.mt i{display:block;height:100%;background:linear-gradient(90deg,var(--ga),#7c5cff,var(--mba));width:0;transition:width .2s}
 .w{padding:2px 10px;border-radius:99px;font-weight:700;font-size:12px;color:var(--bg)}
+.steps{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px;overflow-x:auto;padding:4px 0 10px}.step{min-width:150px;background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:14px;position:relative}.step::after{content:"→";position:absolute;right:-14px;top:42%;z-index:2;color:var(--mba);font-weight:800}.step:last-child::after{display:none}.step b{display:block;font-size:14px}.step small{color:var(--mu)}
+.insight{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.insight .c{min-height:120px}.metric-table td:first-child{font-weight:700}.note{border:1px dashed var(--ln);background:color-mix(in srgb,var(--pn) 82%,var(--ga));border-radius:14px;padding:14px;color:var(--mu)}
+.scale-bars{display:grid;gap:8px}.scale-row{display:grid;grid-template-columns:64px 1fr 92px;align-items:center;gap:8px;font:12px 'JetBrains Mono',monospace}.scale-row i{display:block;height:12px;border-radius:99px;background:linear-gradient(90deg,var(--ga),#7c5cff);min-width:2px}
+#tip{position:fixed;z-index:100;display:none;max-width:260px;pointer-events:none;background:var(--fg);color:var(--bg);border:1px solid var(--ln);border-radius:10px;padding:9px 11px;font:12px/1.45 'JetBrains Mono',monospace;box-shadow:0 10px 30px rgba(0,0,0,.25)}#tip b{display:block;font-size:13px;margin-bottom:2px}
+.vb i,.tk i{cursor:help}
+.explainer{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0}.explainer div{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:11px;color:var(--mu);font-size:13px}.explainer b{display:block;color:var(--fg);margin-bottom:3px}
 footer{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:12px;padding:10px 10px calc(10px + env(safe-area-inset-bottom,0px));z-index:20;pointer-events:none}footer>*{pointer-events:auto}
 footer span{font:600 12px 'JetBrains Mono',monospace;color:var(--mu);background:var(--pn);padding:9px 12px;border-radius:99px;border:1px solid var(--ln)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
-<div id="pr"></div>
+<div id="pr"></div><div id="tip"></div>
 <header><nav id="nav"></nav><button class="alt" id="th" title="Ganti tema" aria-label="Ganti tema">◐</button></header>
 <main>
 <section class="pg" id="ringkasan" data-t="Ringkasan">
-<div class="hero"><canvas id="c1" width="1000" height="340"></canvas><div class="tx"><h2>Menjadwalkan task ke VM: evolusi lawan kelelawar</h2><p class="lead">Genetic Algorithm dan Modified Bat Algorithm sama-sama mencari jadwal terbaik. Kelelawar di belakang ini sedang memburu satu jadwal terbaik.</p></div></div>
+<div class="hero"><canvas id="c1" width="1000" height="340"></canvas><div class="tx"><h2>Menjadwalkan task ke VM: GA dan MBA</h2><p class="lead">Genetic Algorithm berevolusi melalui populasi jadwal, sedangkan Modified Bat Algorithm mengarahkan kelelawar menuju jadwal terbaik. Keduanya membandingkan hasil pencarian pada masalah yang sama.</p></div></div>
 <p class="lead">Di cloud, banyak task harus dibagi ke VM yang kecepatannya berbeda-beda. Untuk 40 task dan 4 VM saja ada 4⁴⁰ ≈ 1,2 × 10²⁴ kemungkinan jadwal, jadi dipakai algoritma meta-heuristik yang mencari jadwal mendekati optimal dengan cepat.</p>
 <div class="cards"><div class="c"><b>Makespan kecil</b>Waktu sampai task terakhir selesai sesingkat mungkin.</div><div class="c"><b>Utilisasi tinggi</b>Tidak ada VM yang menganggur.</div><div class="c"><b>Beban merata</b>Ketimpangan beban antar VM (degree of imbalance) ditekan.</div></div>
-<div class="cards"><div class="c g"><b class="tg">Genetic Algorithm</b>Populasi jadwal berevolusi lewat seleksi, crossover, dan mutasi.</div><div class="c m"><b class="tm">Modified Bat Algorithm</b>Kelelawar mengejar jadwal terbaik, diatur oleh loudness dan pulse rate.</div></div>
-<p>Pakai tombol panah ← → atau tombol di bawah untuk berpindah halaman saat presentasi.</p></section>
+<div class="cards"><div class="c g"><b class="tg">Genetic Algorithm · Evolusioner</b>Mulai dari populasi solusi acak, evaluasi fitness, pilih induk terbaik, lakukan crossover dan mutasi, lalu jaga 2 elit terbaik untuk generasi berikutnya.</div><div class="c m"><b class="tm">Modified Bat Algorithm · Swarm</b>Setiap kelelawar adalah kandidat jadwal; kandidat bergerak meniru <i>global best</i>, lalu loudness turun dan pulse rate naik untuk memperkuat pencarian lokal.</div></div>
+</section>
 
 <section class="pg" id="model" data-t="Model Masalah"><h2>Model masalah</h2>
 <p class="lead">N task (panjang L dalam MI) dibagi ke M VM (kecepatan S dalam MIPS). Satu jadwal adalah vektor x, dan x<sub>i</sub> adalah VM tujuan task i.</p>
@@ -71,24 +77,140 @@ footer span{font:600 12px 'JetBrains Mono',monospace;color:var(--mu);background:
 <h3>Asumsi</h3><div class="chips"><span class="chip">task independen</span><span class="chip">non-preemptive</span><span class="chip">VM heterogen, jumlah tetap</span><span class="chip">transfer data diabaikan</span></div></section>
 
 <section class="pg" id="ga" data-t="Genetic Algorithm"><h2 class="tg">Genetic Algorithm</h2>
-<p class="lead">Terinspirasi seleksi alam: jadwal yang lebih baik lebih sering jadi induk dan menurunkan jadwal baru.</p>
-<div class="cards" id="gaf"><div class="c g"><b><span class="n1">1</span>Inisialisasi</b>Populasi 30 jadwal acak.</div><div class="c g"><b><span class="n1">2</span>Evaluasi</b>Hitung makespan dan fitness tiap kromosom.</div><div class="c g"><b><span class="n1">3</span>Seleksi</b>Tournament: ambil makespan terkecil dari 3 kandidat acak.</div><div class="c g"><b><span class="n1">4</span>Crossover</b>Tiap gen diambil dari induk 1 atau 2 secara acak (pc = 0,8).</div><div class="c g"><b><span class="n1">5</span>Mutasi</b>Tiap gen pindah ke VM acak dengan peluang pm = 0,02.</div><div class="c g"><b><span class="n1">6</span>Elitisme</b>2 jadwal terbaik selalu lolos ke generasi berikutnya.</div></div>
-<div class="chips"><span class="chip">populasi 30</span><span class="chip">pc 0,8</span><span class="chip">pm 0,02</span><span class="chip">elit 2</span></div>
-<div class="cards"><div class="c"><b>Kelebihan</b>Eksplorasi luas dan stabil. Mudah diadaptasi ke fungsi objektif lain.</div><div class="c"><b>Kekurangan</b>Konvergensi lebih lambat dan sensitif terhadap pc, pm, dan ukuran populasi.</div></div></section>
+<p class="lead">GA dipakai untuk mencari jadwal penugasan task ke VM dengan meniru proses evolusi: populasi jadwal dievaluasi, jadwal terbaik dipilih sebagai induk, lalu menghasilkan keturunan yang semakin baik.</p>
+<canvas id="cga" width="1000" height="300"></canvas>
+<p style="color:var(--mu);font-size:13px">Animasi menunjukkan satu siklus: populasi acak dievaluasi, induk terpilih dikawinkan, mutasi menambah variasi, lalu elit terbaik bertahan ke generasi berikutnya.</p>
+<div class="cards" id="gaf">
+<div class="c g"><b><span class="n1">1</span>Inisialisasi populasi</b>Buat 30 kromosom acak. Setiap kromosom berisi satu VM target untuk setiap task, misalnya <code>[2,0,1,0,3,2]</code>.</div>
+<div class="c g"><b><span class="n1">2</span>Evaluasi fitness</b>Untuk setiap kromosom, hitung beban VM, makespan, utilisasi, dan degree of imbalance. Semakin kecil makespan, semakin tinggi fitness.</div>
+<div class="c g"><b><span class="n1">3</span>Tournament selection</b>Ambil beberapa kandidat acak, kemudian pilih yang memiliki makespan terkecil sebagai induk. Seleksi ini menekankan kualitas tanpa membuang semua keragaman.</div>
+<div class="c g"><b><span class="n1">4</span>Crossover</b>Dengan peluang <code>pc = 0,8</code>, gabungkan gen induk 1 dan induk 2. Pada one-point crossover, sebagian gen berasal dari induk pertama dan sisanya dari induk kedua.</div>
+<div class="c g"><b><span class="n1">5</span>Mutasi</b>Dengan peluang <code>pm = 0,02</code> per gen, pindahkan task ke VM acak. Mutasi membuka kemungkinan solusi baru dan mencegah populasi terlalu cepat menyeragam.</div>
+<div class="c g"><b><span class="n1">6</span>Elitisme</b>Simpan 2 kromosom terbaik dari populasi lama agar solusi terbaik tidak hilang saat generasi baru dibentuk.</div></div>
+<h3>Pseudocode GA</h3>
+<pre>P ← buat 30 kromosom acak
+ulang untuk setiap generasi:
+    untuk tiap kromosom x di P:
+        hitung MS(x), utilisasi(x), dan fitness(x)
+    elit ← 2 kromosom dengan MS terkecil
+    P_baru ← elit
+    selama ukuran P_baru kurang dari 30:
+        induk1 ← tournament(P)
+        induk2 ← tournament(P)
+        anak ← crossover(induk1, induk2) jika rand < pc
+        anak ← mutasi_setiap_gen(anak, pm)
+        tambahkan anak ke P_baru
+    P ← P_baru
+kembalikan kromosom dengan MS terkecil</pre>
+<h3>Parameter dalam implementasi</h3>
+<div class="sc"><table><tr><th>Parameter</th><th>Nilai umum</th><th>Peran</th></tr>
+<tr><td>Ukuran populasi</td><td class="n">30</td><td>Menentukan banyaknya kandidat jadwal yang dievaluasi tiap generasi.</td></tr>
+<tr><td>Probabilitas crossover <code>pc</code></td><td class="n">0,8</td><td>Probabilitas dua induk menghasilkan kombinasi jadwal baru.</td></tr>
+<tr><td>Probabilitas mutasi <code>pm</code></td><td class="n">0,02</td><td>Probabilitas satu gen pindah ke VM lain.</td></tr>
+<tr><td>Elitisme</td><td class="n">2</td><td>Menjaga dua solusi terbaik agar tidak hilang.</td></tr>
+<tr><td>Fitness</td><td class="n">1 / makespan</td><td>Makespan kecil menghasilkan nilai fitness lebih besar.</td></tr></table></div>
+<h3>Contoh evolusi satu gen</h3>
+<div class="f">Induk A: [0, 1, 1, 0, 2, 1]</div>
+<div class="f">Induk B: [2, 0, 1, 2, 1, 0]</div>
+<div class="f">Crossover satu titik → [0, 1, 1, 2, 1, 0]</div>
+<div class="f">Mutasi gen ke-4 → [0, 1, 1, 1, 1, 0]</div>
+<div class="cards"><div class="c g"><b>Kelebihan</b>Eksplorasi luas, mudah dihubungkan dengan berbagai fungsi objektif, dan keragaman populasi membantu menghindari solusi lokal.</div><div class="c"><b>Kekurangan</b>Konvergensi dapat lambat, sensitif terhadap ukuran populasi, <code>pc</code>, <code>pm</code>, dan membutuhkan banyak evaluasi fitness.</div></div></section>
 
 <section class="pg" id="mba" data-t="Modified Bat"><h2 class="tm">Modified Bat Algorithm</h2>
-<p class="lead">Terinspirasi ekolokasi kelelawar. Tiap kelelawar adalah satu jadwal yang terbang menuju jadwal terbaik (global best).</p>
+<p class="lead">MBA memodelkan kumpulan kelelawar sebagai kandidat solusi diskrit. Setiap kelelawar merupakan satu jadwal task-ke-VM, berusaha mendekati <i>global best</i>, dan mengatur intensitas pencarian lewat loudness serta pulse rate.</p>
 <canvas id="c2" width="1000" height="260"></canvas>
 <div class="tl"><div class="t"><small>Loudness A (turun)</small><div class="mt"><i id="aA"></i></div></div><div class="t"><small>Pulse rate r (naik)</small><div class="mt"><i id="aR"></i></div></div></div>
-<p style="color:var(--mu)">Awalnya kelelawar menyebar (loudness tinggi, menjelajah). Makin lama pulse rate naik dan mereka merapat memperhalus solusi.</p>
-<div class="sc"><table class="st"><tr><th>Kelelawar</th><th>Penjadwalan</th></tr><tr><td>Posisi</td><td>Vektor jadwal x</td></tr><tr><td>Frekuensi f</td><td>Seberapa kuat jadwal meniru global best</td></tr><tr><td>Loudness A</td><td>Peluang menerima solusi baru; turun tiap iterasi</td></tr><tr><td>Pulse rate r</td><td>Peluang local search; naik tiap iterasi</td></tr><tr><td>Mangsa</td><td>Jadwal dengan makespan terkecil</td></tr></table></div>
-<p>Persamaan aslinya kontinu. Di ruang diskrit, “bergerak ke global best” menjadi menyalin gen dari global best dengan peluang yang bergantung pada f dan iterasi.</p>
-<div class="chips"><span class="chip">30 kelelawar</span><span class="chip">A = 1,0 ; α = 0,97</span><span class="chip">r = 0,3 ; γ = 0,1</span></div>
-<div class="cards"><div class="c"><b>Kelebihan</b>Konvergen cepat. Local search terarah memperhalus solusi akhir.</div><div class="c"><b>Kekurangan</b>Rawan optimum lokal bila keragaman cepat hilang, dan perlu modifikasi untuk masalah diskrit.</div></div></section>
+<p style="color:var(--mu)">Animasi menggambarkan fase eksplorasi di awal: kelelawar menyebar dan menguji banyak jadwal. Saat iterasi bertambah, loudness turun, pulse rate naik, dan kawasan pencarian menyempit di sekitar solusi terbaik.</p>
+<div class="cards" id="mbaf">
+<div class="c m"><b><span class="n1" style="background:linear-gradient(135deg,var(--mba),#ef4565)">1</span>Inisialisasi kawanan</b>Buat 30 jadwal acak sebagai posisi awal setiap kelelawar. Tetapkan loudness awal <code>A = 1,0</code> dan pulse rate awal <code>r = 0,3</code>.</div>
+<div class="c m"><b><span class="n1" style="background:linear-gradient(135deg,var(--mba),#ef4565)">2</span>Bangkitkan frekuensi</b>Frekuensi acak menentukan seberapa kuat kandidat menyalin gen dari <i>global best</i>. Nilai frekuensi makin besar menghasilkan peluang mengikuti solusi terbaik yang makin tinggi.</div>
+<div class="c m"><b><span class="n1" style="background:linear-gradient(135deg,var(--mba),#ef4565)">3</span>Gerakkan posisi diskrit</b>Algoritma asli bekerja di ruang kontinu. Untuk penjadwalan, perpindahan diubah menjadi penyalinan atau pengubahan sebagian gen VM pada kromosom.</div>
+<div class="c m"><b><span class="n1" style="background:linear-gradient(135deg,var(--mba),#ef4565)">4</span>Lakukan local search</b>Saat pulse rate tinggi, pindahkan satu atau dua task ke VM lain di sekitar solusi terbaik untuk memperbaiki beban VM secara langsung.</div>
+<div class="c m"><b><span class="n1" style="background:linear-gradient(135deg,var(--mba),#ef4565)">5</span>Terima solusi baru</b>Selesaikan pencarian kandidat dan terima jika membuat makespan lebih kecil serta memenuhi batas loudness. Solusi yang baru diterima dapat menjadi <i>global best</i>.</div>
+<div class="c m"><b><span class="n1" style="background:linear-gradient(135deg,var(--mba),#ef4565)">6</span>Perbarui parameter</b>Kuatkan pencarian lokal dengan <code>α = 0,97</code> untuk menurunkan loudness dan <code>γ = 0,1</code> untuk menaikkan pulse rate seiring iterasi.</div></div>
+<h3>Modifikasi dari ruang kontinu ke ruang diskrit</h3>
+<div class="sc"><table class="st"><tr><th>Komponen Bat</th><th>Makna pada penjadwalan</th></tr>
+<tr><td>Posisi kelelawar</td><td>Vektor VM untuk setiap task, contoh <code>[2,0,1,0,2,1]</code>.</td></tr>
+<tr><td>Frekuensi f</td><td>Mengatur peluang gen kandidat meniru posisi <i>global best</i>.</td></tr>
+<tr><td>Loudness A</td><td>Mengontrol penerimaan solusi baru. Nilai menurun agar pencarian makin selektif.</td></tr>
+<tr><td>Pulse rate r</td><td>Menambah peluang pencarian lokal yang mengubah satu atau dua penugasan task.</td></tr>
+<tr><td>Global best</td><td>Jadwal dengan makespan terkecil dan fitness terbaik yang pernah ditemukan kawanan.</td></tr></table></div>
+<h3>Persamaan dan aturan diskrit</h3>
+<div class="f">Frekuensi: f<sub>i</sub> = f<sub>min</sub> + (f<sub>max</sub> − f<sub>min</sub>) × β, dengan β ∈ [0,1]</div>
+<div class="f">Loudness: A(t+1) = α × A(t), pada implementasi α = 0,97</div>
+<div class="f">Pulse: r(t+1) = r<sub>0</sub> × (1 − e<sup>−γt</sup>) ; r<sub>0</sub> = 0,3, γ = 0,1</div>
+<div class="f">Versi diskrit: tiap gen x<sub>i</sub> disalin dari global best dengan peluang p(f,iterasi), atau dipindah acak.</div>
+<h3>Pseudocode MBA</h3>
+<pre>inisialisasi 30 kelelawar x_i dengan jadwal acak
+atur A_i = 1,0 dan r_i = 0,3 untuk tiap kelelawar
+x* ← jadwal terbaik dari populasi awal
+ulang untuk setiap iterasi:
+    untuk tiap kelelawar i:
+        hitung frekuensi f_i
+        buat x_baru dengan menyalin beberapa gen dari x*
+        jika rand > r_i:
+            lakukan local search pada satu atau dua task
+        hitung makespan dan fitness x_baru
+        jika makespan(x_baru) < makespan(x_i) dan rand < A_i:
+            x_i ← x_baru
+            A_i ← α × A_i
+            r_i ← r0 × (1 − e^(-γ×iterasi))
+        jika x_i lebih baik dari x*:
+            x* ← x_i
+kembalikan x* sebagai jadwal terbaik</pre>
+<div class="chips"><span class="chip">30 kelelawar</span><span class="chip">A = 1,0</span><span class="chip">α = 0,97</span><span class="chip">r = 0,3</span><span class="chip">γ = 0,1</span></div>
+<div class="cards"><div class="c m"><b>Kelebihan</b>Pencarian lokal terarah, konvergen cepat saat kawanan mendekati solusi baik, dan suara ekolokasi dapat menyeimbangkan eksplorasi-ekploitasi.</div><div class="c"><b>Kekurangan</b>Berisiko optimum lokal, keragaman menurun terlalu cepat, dan membutuhkan interpretasi operator karena masalah penjadwalan bersifat diskrit.</div></div></section>
 
 <section class="pg" id="banding" data-t="Perbandingan"><h2>Perbandingan metodologi</h2>
+<canvas id="cb" width="1000" height="300"></canvas>
+<p style="color:var(--mu);font-size:13px">Animasi membandingkan dua pola pencarian: GA menyebarkan populasi kromosom lalu berevolusi antar generasi, sedangkan MBA menggerakkan kawanan ke arah solusi terbaik sambil mempersempit pencarian lokal.</p>
 <div class="sc"><table><tr><th>Aspek</th><th class="tg">GA</th><th class="tm">MBA</th></tr><tr><td>Kategori</td><td>Evolusioner</td><td>Swarm intelligence</td></tr><tr><td>Operator utama</td><td>Seleksi, crossover, mutasi</td><td>Frekuensi, loudness, pulse rate, local search</td></tr><tr><td>Berbagi informasi</td><td>Lewat pasangan induk</td><td>Semua mengacu ke global best</td></tr><tr><td>Eksplorasi</td><td>Mutasi + keragaman populasi</td><td>Loudness tinggi di awal</td></tr><tr><td>Eksploitasi</td><td>Elitisme + seleksi</td><td>Local search saat r naik</td></tr><tr><td>Konvergensi</td><td>Lebih lambat, stabil</td><td>Cepat di awal</td></tr><tr><td>Risiko utama</td><td>Konvergensi lambat</td><td>Optimum lokal</td></tr><tr><td>Kompleksitas / iterasi</td><td class="n">O(P·N)</td><td class="n">O(B·N)</td></tr></table></div>
 <p>Dugaan awal: MBA unggul dalam kecepatan menurunkan makespan, GA lebih tahan konvergen prematur. Buktikan di halaman Simulasi dan jalankan beberapa kali karena hasilnya acak.</p></section>
+
+<section class="pg" id="proses" data-t="Alur Eksekusi"><h2>Bagaimana prosesnya?</h2>
+<p class="lead">Alur end-to-end sama untuk kedua algoritma: dari dataset sampai pemetaan task ke VM. Perbedaannya hanya pada cara pencarian jadwal terbaik.</p>
+<h3>Alur lengkap simulasi</h3>
+<div class="steps">
+<div class="step"><b>1 · Siapkan workload</b><small>Baca 100 task, panjang komputasi dalam MI, dan deadline bila tersedia.</small></div>
+<div class="step"><b>2 · Siapkan VM</b><small>Bangun VM heterogen dengan kecepatan MIPS yang berbeda.</small></div>
+<div class="step"><b>3 · Inisialisasi solusi</b><small>GA membuat populasi kromosom; MBA membuat populasi posisi kelelawar.</small></div>
+<div class="step"><b>4 · Evaluasi fitness</b><small>Hitung beban setiap VM, makespan, utilisasi, dan degree of imbalance.</small></div>
+<div class="step"><b>5 · Cari jadwal baru</b><small>GA memakai crossover/mutasi; MBA memakai frekuensi, loudness, dan pulse rate.</small></div>
+<div class="step"><b>6 · Jalankan final</b><small>CloudSim mengeksekusi jadwal dan mencatat energy, throughput, serta hasil akhir.</small></div>
+</div>
+<h3>Dari satu task sampai jadwal akhir</h3>
+<div class="insight">
+<div class="c g"><b>Encoding</b><code>[2, 0, 1, 0, 3, 2]</code><br>Task dipetakan ke indeks VM yang disebutkan pada gen atau posisi.</div>
+<div class="c"><b>Decoding</b>Urutkan task ke VM tujuan, hitung waktu tiap VM dengan <code>length / MIPS</code>.</div>
+<div class="c m"><b>Evaluasi</b>VM dengan waktu terbesar menjadi makespan; jadwal dengan angka lebih kecil dianggap lebih baik.</div>
+</div>
+<h3>Interpretasi proses</h3>
+<div class="note">GA mengeksplorasi banyak pasangan solusi secara paralel, sedangkan MBA mengarahkan kelelawar menuju <i>global best</i> sambil melakukan pencarian lokal. Kedua pendekatan berhenti setelah iterasi maksimum atau kriteria konvergensi terpenuhi.</div></section>
+
+<section class="pg" id="hasil" data-t="Hasil Eksperimen"><h2>Hasil eksekusi proyek</h2>
+<p class="lead">Angka berikut berasal dari hasil eksperimen pada 100 task yang tercatat dalam proyek. Angka MBA sangat besar pada run ini dan perlu ditafsirkan bersama implementasi serta unit waktu.</p>
+<div class="tl">
+<div class="t"><small>GA · Makespan</small><b class="tg">273,9825 s</b></div>
+<div class="t"><small>MBA · Makespan</small><b class="tm">19.830.250.035 s</b></div>
+<div class="t"><small>GA · Utilisasi</small><b class="tg">44,52%</b></div>
+<div class="t"><small>MBA · Utilisasi</small><b class="tm">100,00%</b></div>
+</div>
+<div class="sc"><table class="metric-table"><tr><th>Metrik 100 task</th><th class="tg">GA</th><th class="tm">MBA</th><th>Penilaian run ini</th></tr>
+<tr><td>Makespan</td><td class="n">273,9825 s</td><td class="n">19.830.250.035,1413 s</td><td>GA jauh lebih rendah</td></tr>
+<tr><td>Energi</td><td class="n">131.769,60 J</td><td class="n">44.419.760.078.716,516 J</td><td>GA jauh lebih rendah</td></tr>
+<tr><td>Utilisasi CPU/VM</td><td class="n">44,52%</td><td class="n">100,00%</td><td>MBA melaporkan penuh</td></tr>
+<tr><td>Throughput</td><td class="n">0,364987 task/s</td><td class="n">5,0428 × 10<sup>-9</sup></td><td>Bergantung formula makespan</td></tr></table></div>
+<h3>Pola skalabilitas GA pada eksperimen</h3>
+<p class="lead">Ringkasan makespan GA pada ukuran workload yang berbeda menunjukkan kenaikan relatif stabil sampai 800 task.</p>
+<div class="scale-bars">
+<div class="scale-row"><b>100</b><i style="width:47%"></i><span>273,98 s</span></div>
+<div class="scale-row"><b>200</b><i style="width:66%"></i><span>385,17 s</span></div>
+<div class="scale-row"><b>400</b><i style="width:84%"></i><span>488,17 s</span></div>
+<div class="scale-row"><b>600</b><i style="width:83%"></i><span>484,41 s</span></div>
+<div class="scale-row"><b>800</b><i style="width:100%"></i><span>577,15 s</span></div>
+</div>
+<h3>Catatan akademik</h3>
+<div class="note">Hasil eksperimen tidak boleh menyimpulkan MBA selalu lebih buruk hanya dari satu run. Varians, konfigurasi, pembulatan metrik, implementasi diskrit, dan definisi throughput perlu diperiksa ulang. Simulasi acak di halaman berikutnya dibuat untuk pembelajaran, bukan pengganti rerun CloudSim Plus.</div></section>
 
 <section class="pg" id="simulasi" data-t="Simulasi"><h2>Simulasi: GA vs MBA</h2>
 <p class="lead">Task dan VM sama (VM heterogen), jumlah iterasi sama.</p>
@@ -98,8 +220,12 @@ footer span{font:600 12px 'JetBrains Mono',monospace;color:var(--mu);background:
 <canvas id="cg" width="1000" height="260"></canvas>
 <p style="font-size:13px;color:var(--mu)"><b class="tg">■ GA</b> &nbsp; <b class="tm">■ MBA</b> &nbsp; Semakin rendah semakin baik.</p>
 <h3>Hasil akhir</h3><div class="sc"><table id="res"><tr><td>Tekan Jalankan.</td></tr></table></div>
-<h3>Beban tiap VM (detik)</h3><div class="bars"><div><b class="tg">GA</b><div id="bg"></div></div><div><b class="tm">MBA</b><div id="bm"></div></div></div>
-<h3>Gantt chart</h3><div class="ctl" style="margin-top:0"><button class="alt on" data-g="ga">GA</button><button class="alt" data-g="mba">MBA</button><span style="color:var(--mu)">Muncul setelah simulasi selesai, skala waktu sama</span></div><div id="gx"></div></section>
+<h3>Beban tiap VM (detik)</h3>
+<div class="explainer"><div><b>Warna gradien</b>Hijau–ungu menunjukkan hasil GA; oranye–merah menunjukkan hasil MBA. Warna bukan tingkat kepentingan.</div><div><b>Panjang bar</b>Makin panjang, makin lama beban kumulatif yang harus dijalankan VM tersebut.</div><div><b>Angka di kanan</b>Waktu beban VM dalam satuan detik pada solusi terbaik algoritma.</div></div>
+<div class="bars"><div><b class="tg">GA</b><div id="bg"></div></div><div><b class="tm">MBA</b><div id="bm"></div></div></div>
+<h3>Gantt chart</h3><div class="ctl" style="margin-top:0"><button class="alt on" data-g="ga">GA</button><button class="alt" data-g="mba">MBA</button><span style="color:var(--mu)">Arahkan kursor ke blok task untuk melihat waktu mulai dan selesai</span></div>
+<div class="explainer"><div><b>Baris VM</b>Menunjukkan VM tempat task dijadwalkan.</div><div><b>Setiap warna</b>Mewakili satu task acak. Warna berbeda memudahkan batas antar-task.</div><div><b>Panjang blok</b>Panjang eksekusi task = panjang komputasi task dibagi kecepatan MIPS VM.</div></div>
+<div id="gx"></div></section>
 
 <section class="pg" id="tantang" data-t="Tantangan"><h2>Tantangan: kamu vs algoritma</h2>
 <p class="lead">12 task, 3 VM (500, 1000, 1500 MIPS). Klik task untuk memindah VM-nya dan buat makespan sekecil mungkin, lalu adu dengan GA dan MBA.</p>
@@ -128,7 +254,7 @@ $('#th').onclick=()=>{const d=document.documentElement,dk=d.dataset.theme?d.data
 function ev(x,L,S){const ld=Array(S.length).fill(0);x.forEach((v,i)=>ld[v]+=L[i]/S[v]);
 const ms=Math.max(...ld),sum=ld.reduce((a,b)=>a+b,0);return{ms,ld,ut:sum/(ms*S.length)*100,di:(ms-Math.min(...ld))/(sum/S.length)}}
 function bars(el,m,mx,c){const e=$(el);if(e.children.length!==m.ld.length)e.innerHTML=m.ld.map(()=>'<div class="vb"><span></span><i></i><b></b></div>').join('');
-[...e.children].forEach((r,j)=>{r.children[0].textContent='VM'+j;r.children[1].style.width=m.ld[j]/mx*72+'%';r.children[1].style.background=Array.isArray(c)?c[j]:c;r.children[2].textContent=m.ld[j].toFixed(1)})}
+[...e.children].forEach((r,j)=>{r.children[0].textContent='VM'+j;r.children[1].style.width=m.ld[j]/mx*72+'%';r.children[1].style.background=Array.isArray(c)?c[j]:c;r.children[1].dataset.tip=`<b>VM${j}</b>Beban kumulatif: ${m.ld[j].toFixed(2)} detik<br>Waktu ini dihitung dari semua task yang ditempatkan pada VM ini.`;r.children[2].textContent=m.ld[j].toFixed(1)})}
 
 /* Model interaktif */
 const ML=[400,600,500,300],MS=[100,200],mx=[0,1,1,0];
@@ -139,16 +265,132 @@ $('#tc').onclick=e=>{const b=e.target.closest('button');if(b){mx[b.dataset.i]^=1
 /* Alur GA */
 let gi=0;setInterval(()=>{if($('#ga').classList.contains('on'))$$('#gaf .c').forEach((e,i)=>e.classList.toggle('hot',i===gi%6));gi++},1400);
 
+function gaEvolution(){
+ const cv=$('#cga');if(!cv)return;
+ const c=cv.getContext('2d'),W=cv.width,H=cv.height;let t=0;
+ (function frame(){
+  requestAnimationFrame(frame);if(!$('#ga').classList.contains('on'))return;
+  c.clearRect(0,0,W,H);const cg=col('--ga'),ln=col('--ln'),fg=col('--fg');
+  c.fillStyle=ln;c.fillRect(20,45,280,H-90);c.fillRect(360,45,280,H-90);c.fillRect(680,45,280,H-90);
+  c.fillStyle=fg;c.font='700 14px monospace';c.fillText('1 · POPULASI ACAK',38,34);c.fillText('2 · SELEKSI + CROSSOVER',378,34);c.fillText('3 · MUTASI + ELITISME',698,34);
+  const phase=(t/100)%3;
+  for(let i=0;i<6;i++){
+   const yy=70+i*34,noise=(i*47+t*.8)%90;
+   c.fillStyle=cg;c.globalAlpha=.35+((i+t/40)%6<1?.45:0);for(let j=0;j<6;j++){const x=38+j*38;c.fillRect(x+noise*.08,yy,22,12)}
+   c.globalAlpha=1;
+  }
+  c.strokeStyle=cg;c.lineWidth=3;c.setLineDash([7,7]);
+  c.beginPath();c.moveTo(300,150);c.lineTo(360,150);c.stroke();c.beginPath();c.moveTo(640,150);c.lineTo(680,150);c.stroke();c.setLineDash([]);
+  for(let i=0;i<5;i++){
+   const yy=76+i*38,sweep=(t*.7+i*33)%220;
+   c.fillStyle=i===0?'#7c5cff':cg;c.globalAlpha=.9;c.fillRect(378+sweep*.12,yy,210-sweep*.12*.35,13);
+   c.fillStyle=fg;c.globalAlpha=.7;c.font='11px monospace';c.fillText(i===0?'ELIT':'INDUK',390+sweep*.12,yy+11);
+  }
+  c.globalAlpha=1;c.fillStyle=cg;c.shadowColor=cg;c.shadowBlur=12;
+  for(let i=0;i<8;i++){const x=710+(i%4)*70,y=78+Math.floor(i/4)*95+(Math.sin(t/20+i)*8);c.beginPath();c.arc(x,y,7+(i===0?6*Math.sin(t/15):0),0,7);c.fill()}
+  c.shadowBlur=0;c.fillStyle=fg;c.font='12px monospace';c.fillText('ELIT TETAP',710,220);c.fillText('MUTASI ACAK',710,242);
+  c.strokeStyle=cg;c.beginPath();c.moveTo(710,258);c.lineTo(950,258);c.stroke();
+  const best=Math.max(35,220-t*.08);c.fillStyle='#7c5cff';c.fillRect(710,258-best*.15,238,best*.15);
+  t++;
+ })();
+}
+gaEvolution();
+
+function comparisonAnimation(){
+ const cv=$('#cb');if(!cv)return;
+ const c=cv.getContext('2d'),W=cv.width,H=cv.height;let t=0;
+ (function frame(){
+  requestAnimationFrame(frame);if(!$('#banding').classList.contains('on'))return;
+  c.clearRect(0,0,W,H);
+  const cg=col('--ga'),cm=col('--mba'),ln=col('--ln'),fg=col('--fg');
+  c.fillStyle=ln;c.fillRect(20,40,460,220);c.fillRect(520,40,460,220);
+  c.fillStyle=cg;c.font='700 16px monospace';c.fillText('GA · EVOLUSI POPULASI',40,28);
+  c.fillStyle=cm;c.fillText('MBA · GERAKAN KAWANAN',540,28);
+  c.fillStyle=fg;c.font='12px monospace';c.fillText('Generasi',40,82);c.fillText('Global best',540,82);
+  const cycle=(t%240)/240;
+  c.strokeStyle=cg;c.lineWidth=3;c.beginPath();
+  for(let i=0;i<13;i++){
+   const x=55+i*31,y=210-Math.sin(i*.55+t*.025)*22-cycle*Math.max(0,i-7)*4-Math.random()*2;
+   i?c.lineTo(x,y):c.moveTo(x,y);
+  }
+  c.stroke();
+  for(let i=0;i<18;i++){
+   const col=i%3===0?'#7c5cff':cg;
+   const x=70+i*19+Math.sin(t*.018+i)*14;
+   const y=105+(i*37)%120+Math.cos(t*.012+i)*8;
+   c.fillStyle=col;c.globalAlpha=.5+i/60;c.beginPath();c.arc(x,y,5,0,7);c.fill();
+  }
+  c.globalAlpha=.85;c.strokeStyle=cm;c.lineWidth=2;
+  const gx=770+Math.cos(t*.018)*12,gy=155+Math.sin(t*.018)*15;
+  c.beginPath();c.arc(gx,gy,28+10*Math.sin(t*.04),0,7);c.stroke();
+  c.fillStyle=cm;c.beginPath();c.arc(gx,gy,7,0,7);c.fill();
+  c.fillStyle=fg;c.font='11px monospace';c.fillText('GLOBAL BEST',gx-38,gy+48);
+  for(let i=0;i<24;i++){
+   const angle=i*2.399+t*.006;
+   const spread=150*(1-cycle*.65);
+   let x=gx+Math.cos(angle)*spread+Math.sin(t*.02+i)*12;
+   let y=gy+Math.sin(angle)*spread*.55+Math.cos(t*.015+i)*10;
+   x=Math.max(540,Math.min(960,x));y=Math.max(70,Math.min(250,y));
+   c.fillStyle=i%3===0?'#ef4565':cm;c.globalAlpha=.75;c.beginPath();
+   c.moveTo(x-7,y-4);c.quadraticCurveTo(x,y+4,x+7,y-4);c.stroke();c.beginPath();c.arc(x,y,2,0,7);c.fill();
+  }
+  c.globalAlpha=1;
+  c.fillStyle=cg;c.fillRect(55,246,70,8);c.fillStyle=cm;c.fillRect(540,246,70,8);
+  c.fillStyle=fg;c.font='11px monospace';c.fillText('seleksi · crossover · mutasi',135,254);c.fillText('frekuensi · loudness · pulse',620,254);
+  t++;
+ })();
+}
+comparisonAnimation();
+
 /* Kawanan kelelawar */
 function swarm(id,pid,tx,ty,metr){const c=$(id).getContext('2d'),W=1000,H=+$(id).height;let t=0;
-const init=()=>Array.from({length:30},()=>({x:Math.random()*W*.45,y:20+Math.random()*(H-40)}));let B=init();
+const init=()=>Array.from({length:30},(_,i)=>({x:Math.random()*W*.45,y:20+Math.random()*(H-40),type:i%2}));let B=init();
 (function f(){requestAnimationFrame(f);if(!$(pid).classList.contains('on'))return;
-const cg=col('--ga'),cm=col('--mba'),p=t/460;c.clearRect(0,0,W,H);c.shadowBlur=0;
-c.strokeStyle=cm;c.lineWidth=2;c.globalAlpha=1-((t*2)%140)/140;c.beginPath();c.arc(tx,ty,(t*2)%140,0,7);c.stroke();c.globalAlpha=1;
-const rg=c.createRadialGradient(tx,ty,0,tx,ty,44);rg.addColorStop(0,'#fff');rg.addColorStop(.25,cm);rg.addColorStop(1,'transparent');c.fillStyle=rg;c.beginPath();c.arc(tx,ty,40+6*Math.sin(t/8),0,7);c.fill();
-c.strokeStyle=cg;c.fillStyle=cg;c.lineWidth=2.5;c.shadowColor=cg;c.shadowBlur=10;
-B.forEach(b=>{const k=.004+.03*p*Math.random(),j=6-5*p;b.x+=(tx-b.x)*k+(Math.random()-.5)*j;b.y+=(ty-b.y)*k+(Math.random()-.5)*j;
-c.beginPath();c.moveTo(b.x-8,b.y-4);c.quadraticCurveTo(b.x,b.y+4,b.x+8,b.y-4);c.stroke();c.beginPath();c.arc(b.x,b.y,2.5,0,7);c.fill()});
+const cg=col('--ga'),cm=col('--mba'),ln=col('--ln'),p=t/460;c.clearRect(0,0,W,H);c.shadowBlur=0;
+if(metr===0){
+ c.fillStyle=cg;c.font='700 12px monospace';c.fillText('GA · POPULASI',610,44);
+ c.fillStyle=cm;c.fillText('MBA · KELELAWAR',820,44);
+ c.strokeStyle=ln;c.globalAlpha=.7;c.beginPath();c.moveTo(790,58);c.lineTo(790,310);c.stroke();c.globalAlpha=1;
+
+ const gen=(Math.floor(t/100)%4)+1;
+ c.fillStyle=col('--mu');c.font='11px monospace';c.fillText('GENERASI '+gen,600,78);
+ for(let r=0;r<3;r++){
+  const y=96+r*52;
+  for(let g=0;g<7;g++){
+   const active=(t/20+r*2+g)%9<2.2;
+   const val=(r*7+g+gen)%4;
+   const x=610+g*22;
+   c.fillStyle=active?'#7c5cff':cg;c.globalAlpha=active?.95:.42;
+   c.fillRect(x,y,17,28);
+   c.globalAlpha=1;c.fillStyle='#fff';c.font='700 10px monospace';c.fillText(String(val),x+5,y+18);
+  }
+ }
+ c.strokeStyle=cg;c.lineWidth=3;c.setLineDash([6,5]);
+ c.beginPath();c.moveTo(610,270);c.bezierCurveTo(670,235,710,300,766,270);c.stroke();c.setLineDash([]);
+ c.fillStyle=cg;c.beginPath();c.moveTo(766,262);c.lineTo(780,270);c.lineTo(766,278);c.fill();
+ c.fillStyle=col('--fg');c.font='10px monospace';c.fillText('SELEKSI',610,315);c.fillText('CROSSOVER',674,315);c.fillText('MUTASI',744,315);
+
+ const best={x:900,y:170};
+ c.strokeStyle=cm;c.lineWidth=2;c.globalAlpha=.6;c.beginPath();c.arc(best.x,best.y,34+5*Math.sin(t/12),0,7);c.stroke();c.globalAlpha=1;
+ c.fillStyle=cm;c.beginPath();c.arc(best.x,best.y,6,0,7);c.fill();
+ B.forEach((b,i)=>{
+  const k=.018+.012*p,bx=820+(i%5)*34,by=80+Math.floor(i/5)*34;
+  b.x+=(b.type?(b.x<760?best.x:b.x):bx-b.x)*k;
+  b.y+=(b.type?by+(best.y-170)*.08:by-b.y)*k+(Math.random()-.5)*2;
+  c.strokeStyle=cm;c.fillStyle=cm;c.lineWidth=2;c.shadowColor=cm;c.shadowBlur=6;
+  c.beginPath();c.moveTo(b.x-7,b.y-3);c.quadraticCurveTo(b.x,b.y+4,b.x+7,b.y-3);c.stroke();c.beginPath();c.arc(b.x,b.y,2,0,7);c.fill();
+ });
+}else{
+ c.fillStyle=col('--ln');c.fillRect(0,0,W,H);
+ c.strokeStyle=col('--ln');c.lineWidth=1;
+ for(let x=40;x<W;x+=80){c.beginPath();c.moveTo(x,20);c.lineTo(x,H-20);c.stroke()}
+ c.fillStyle=col('--fg');c.font='700 14px monospace';c.fillText('KAWANAN MENYEBAR',40,28);c.fillText('GLOBAL BEST',740,28);
+ c.strokeStyle=cm;c.lineWidth=2;c.globalAlpha=1-((t*2)%140)/140;c.beginPath();c.arc(tx,ty,(t*2)%140,0,7);c.stroke();c.globalAlpha=1;
+ const rg=c.createRadialGradient(tx,ty,0,tx,ty,44);rg.addColorStop(0,'#fff');rg.addColorStop(.25,cm);rg.addColorStop(1,'transparent');c.fillStyle=rg;c.beginPath();c.arc(tx,ty,40+6*Math.sin(t/8),0,7);c.fill();
+ c.strokeStyle=cg;c.fillStyle=cg;c.lineWidth=2.5;c.shadowColor=cg;c.shadowBlur=10;
+ B.forEach(b=>{const k=.004+.03*p*Math.random(),j=6-5*p;b.x+=(tx-b.x)*k+(Math.random()-.5)*j;b.y+=(ty-b.y)*k+(Math.random()-.5)*j;
+ c.beginPath();c.moveTo(b.x-8,b.y-4);c.quadraticCurveTo(b.x,b.y+4,b.x+8,b.y-4);c.stroke();c.beginPath();c.arc(b.x,b.y,2.5,0,7);c.fill()});
+}
 if(++t>480){t=0;B=init()}
 if(metr){$('#aA').style.width=Math.max(8,100-p*90)+'%';$('#aR').style.width=30+70*(1-Math.exp(-p*4))+'%'}})()}
 swarm('#c1','#ringkasan',800,170,0);swarm('#c2','#mba',820,130,1);
@@ -176,7 +418,8 @@ c.strokeStyle=col('--ln');c.fillStyle=col('--mu');c.font='11px monospace';c.line
 for(let i=0;i<=4;i++){const y=25+i*52.5;c.beginPath();c.moveTo(40,y);c.lineTo(990,y);c.stroke();c.fillText((mx-(mx-mn)*i/4).toFixed(1),2,y+4)}
 line(c,hm,col('--mba'),mn,mx,'#ef4565');line(c,hg,col('--ga'),mn,mx,'#7c5cff')}
 function gt(){if(!D)return;const sel=$('button[data-g].on').dataset.g,x=sel==='ga'?D.g.best:D.m.best,mx=Math.max(D.g.bm.ms,D.m.bm.ms);
-$('#gx').innerHTML=D.S.map((s,v)=>`<div class="gr"><span>VM${v}</span><div class="tk">${x.map((t,i)=>t===v?`<i style="--d:${i};width:${D.L[i]/s/mx*100}%;background:${PAL[i%10]}" title="T${i}"></i>`:'').join('')}</div></div>`).join('')}
+const cur=Array(D.S.length).fill(0);
+$('#gx').innerHTML=D.S.map((s,v)=>`<div class="gr"><span>VM${v}</span><div class="tk">${x.map((t,i)=>t===v?`<i style="--d:${i};width:${D.L[i]/s/mx*100}%;background:${PAL[i%10]}" data-tip="<b>Task T${i}</b>VM tujuan: VM${v}<br>Durasi: ${(D.L[i]/s).toFixed(2)} detik<br>Mulai: ${cur[v].toFixed(2)} detik<br>Selesai: ${(cur[v]+=D.L[i]/s).toFixed(2)} detik"></i>`:'').join('')}</div></div>`).join('')}
 function show(fin){if(!D)return;const g=D.g.bm,m=D.m.bm,mx=Math.max(g.ms,m.ms);
 const rows=[['Makespan (s)',g.ms,m.ms,1,2],['Utilisasi (%)',g.ut,m.ut,0,1],['Degree of imbalance',g.di,m.di,1,3],['Iterasi mencapai hasil akhir',D.cg,D.cm,1,0],['Waktu komputasi (ms)',D.g.t,D.m.t,1,1]];
 $('#res').innerHTML='<tr><th>Metrik</th><th class="tg">GA</th><th class="tm">MBA</th><th>Lebih baik</th></tr>'+rows.map(r=>{const w=r[1]===r[2]?'Seri':((r[1]<r[2])===!!r[3]?'GA':'MBA');
@@ -191,6 +434,10 @@ if(!hg.length||g.bm.ms<hg[hg.length-1])D.cg=it+1;if(!hm.length||m.bm.ms<hm[hm.le
 hg.push(g.bm.ms);hm.push(m.bm.ms);it++;drawG(hg,hm);
 $('#sg').textContent=g.bm.ms.toFixed(2)+' s';$('#sm').textContent=m.bm.ms.toFixed(2)+' s';$('#pb').style.width=it/max*100+'%';
 if(it%5===0||it===max)show(it===max);if(it<max)raf=requestAnimationFrame(step)})()};
+const tip=$('#tip');
+document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(!el)return;tip.innerHTML=el.dataset.tip;tip.style.display='block'});
+document.addEventListener('mousemove',e=>{if(tip.style.display!=='block')return;const x=Math.min(innerWidth-tip.offsetWidth-12,e.clientX+14),y=Math.min(innerHeight-tip.offsetHeight-12,e.clientY+14);tip.style.left=x+'px';tip.style.top=y+'px'});
+document.addEventListener('mouseout',e=>{if(e.target.closest('[data-tip]'))tip.style.display='none'});
 /* Hover grafik */
 $('#cg').onmousemove=e=>{if(!window.HH)return;const r=e.target.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*1000,i=Math.round((x-40)/950*(TOT-1)),[a,b]=HH;if(i<0||i>=a.length)return;drawG(a,b);const c=e.target.getContext('2d'),X=40+i/(TOT-1)*950,tx=X>700?X-150:X+8;c.strokeStyle=col('--fg');c.setLineDash([4,4]);c.beginPath();c.moveTo(X,10);c.lineTo(X,240);c.stroke();c.setLineDash([]);c.font='12px monospace';c.fillStyle=col('--fg');c.fillText('iterasi '+(i+1),tx,22);c.fillStyle=col('--ga');c.fillText('GA  '+a[i].toFixed(2),tx,38);c.fillStyle=col('--mba');c.fillText('MBA '+b[i].toFixed(2),tx,54)};
 
