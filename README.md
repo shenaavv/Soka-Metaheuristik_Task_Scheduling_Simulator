@@ -31,6 +31,7 @@ bias; dataset asli MBA disimpan sebagai
 ├── README.md
 ├── requirements.txt
 ├── run_scalability_experiment.py
+├── ga-vs-mba.html
 ├── SOKA A_Kelompok 4_DESIGN PROJECT.pdf
 ├── cloudsim-plus-ga/
 │   ├── pom.xml
@@ -38,12 +39,22 @@ bias; dataset asli MBA disimpan sebagai
 │   ├── results/
 │   └── src/main/java/id/its/cloudtaskscheduling/
 │       └── GeneticAlgorithmCloudTaskScheduling.java
-└── cloudsim-plus-mba/
-    ├── pom.xml
-    ├── dataset/
-    ├── results/
-    └── src/main/java/id/its/cloudtaskscheduling/
-        └── MBACloudTaskScheduling.java
+├── cloudsim-plus-mba/
+│   ├── pom.xml
+│   ├── dataset/
+│   ├── results/
+│   └── src/main/java/id/its/cloudtaskscheduling/
+│       └── MBACloudTaskScheduling.java
+├── cloudsim-plus-mba-ga/
+│   ├── pom.xml
+│   └── src/main/java/id/its/cloudtaskscheduling/
+│       ├── ga/GAScheduler.java
+│       ├── mba/MBAScheduler.java
+│       └── MainSimulation.java
+└── results/
+    ├── scalability_summary.csv
+    ├── scalability_runs.csv
+    └── scalability_*.svg
 ```
 
 ## Modul Gabungan `cloudsim-plus-mba-ga`
@@ -79,6 +90,42 @@ aslinya sehingga hasil GA dan MBA tidak saling menimpa.
 
 Folder `results/` berisi mapping, metrik, log eksekusi, dan grafik dari arsip
 asal. Folder `target/` akan dibuat ulang oleh Maven bila belum tersedia.
+
+## Website Penjelasan dan Simulasi Interaktif
+
+Repository juga menyediakan satu halaman website interaktif pada
+[`ga-vs-mba.html`](ga-vs-mba.html). Website dapat langsung dibuka sebagai file
+atau dijalankan melalui server lokal agar navigasi dan semua animasinya
+berjalan konsisten.
+
+```bash
+python3 -m http.server 4173 --bind 127.0.0.1
+```
+
+Buka `http://127.0.0.1:4173/ga-vs-mba.html` di browser. Layar memakai navigasi
+tab/slide dan mendukung tema terang maupun gelap, tombol navigasi, serta
+papan tombol panah pada papan ketik.
+
+Isi website:
+
+| Bagian | Penjelasan |
+| --- | --- |
+| Ringkasan | Perbandingan tujuan penjadwalan, masalah pencarian, dan mekanisme GA serta MBA dalam satu visual animasi. |
+| Model Masalah | Representasi solusi task-ke-VM, rumus beban, makespan, utilisasi, degree of imbalance, serta contoh interaktif pemindahan task. |
+| Genetic Algorithm | Animasi evolusi populasi, populasi kromosom, seleksi, crossover, mutasi, elitisme, pseudocode, parameter, dan contoh evolusi gen. |
+| Modified Bat | Animasi kawanan, frekuensi, loudness, pulse rate, global best, local search, pseudocode, serta adaptasi dari ruang kontinu ke diskrit. |
+| Perbandingan | Tabel perbandingan metodologi dan animasi kompetisi antara pola evolusi GA dan pola swarm intelligence MBA. |
+| Alur Eksekusi | Tahapan dari workload dan VM, inisialisasi solusi, evaluasi fitness, pencarian jadwal, sampai eksekusi dan pencatatan metrik. |
+| Hasil Eksperimen | Ringkasan hasil run 100 task, pola skalabilitas GA, dan catatan batas interpretasi hasil MBA. |
+| Simulasi | Grafik konvergensi, konfigurasi task/VM/iterasi/parameter, beban tiap VM, Gantt chart, dan tooltip penjelasan pada setiap blok task. |
+| Tantangan | Permainan interaktif membuat penjadwalan sendiri kemudian membandingkannya dengan hasil GA dan MBA. |
+| Referensi | Daftar referensi dasar algoritma, framework, dan simulasi. |
+
+Pada Gantt chart, warna yang berbeda menandai task yang berbeda; panjang blok
+menyatakan waktu eksekusi task pada VM tujuan. Arahkan kursor ke blok untuk
+menampilkan Task ID, VM tujuan, durasi, waktu mulai, dan waktu selesai.
+Bagian beban VM juga menyediakan tooltip untuk menjelaskan arti bar dan angka
+beberapa detik pada setiap VM.
 
 ## Arsitektur Cloud
 
