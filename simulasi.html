@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Simulasi CloudSim Plus · Laporan Run & Arsitektur VM</title>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <style>
+    :root {
+      --bg: #eef3f2;
+      --pn: #fff;
+      --fg: #10201f;
+      --mu: #5a6e6c;
+      --ln: #d3dfdd;
+      --ga: #0b8f7f;
+      --mba: #d98200;
+      --cd: #e3ecea;
+      --ac: #0b8f7f;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media(prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0a1517;
+        --pn: #112124;
+        --fg: #e6f0ee;
+        --mu: #8aa3a0;
+        --ln: #21393c;
+        --ga: #36d6bd;
+        --mba: #ffb02e;
+        --cd: #173035;
+        --ac: #36d6bd;
+        color-scheme: dark
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0a1517;
+      --pn: #112124;
+      --fg: #e6f0ee;
+      --mu: #8aa3a0;
+      --ln: #21393c;
+      --ga: #36d6bd;
+      --mba: #ffb02e;
+      --cd: #173035;
+      --ac: #36d6bd;
+      color-scheme: dark
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      height: 100%;
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font: 16px/1.6 'Bricolage Grotesque', system-ui, sans-serif
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: -1;
+      pointer-events: none;
+      filter: blur(30px);
+      background: radial-gradient(40% 40% at 18% 18%, color-mix(in srgb, var(--ga) 38%, transparent), transparent), radial-gradient(35% 40% at 82% 28%, color-mix(in srgb, var(--mba) 32%, transparent), transparent), radial-gradient(45% 45% at 50% 92%, color-mix(in srgb, #7c5cff 30%, transparent), transparent);
+      animation: au 18s ease-in-out infinite alternate
+    }
+
+    @keyframes au {
+      to {
+        transform: translate(5%, -4%) rotate(10deg) scale(1.12)
+      }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0 0 auto;
+      height: env(safe-area-inset-top, 0px);
+      background: var(--pn);
+      z-index: 30
+    }
+
+    #pr {
+      position: fixed;
+      left: 0;
+      top: env(safe-area-inset-top, 0px);
+      height: 4px;
+      background: linear-gradient(90deg, var(--ga), #7c5cff, #ef4565, var(--mba));
+      transition: width .5s;
+      z-index: 31
+    }
+
+    header {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 20;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 10px clamp(12px, 3vw, 32px);
+      background: var(--pn);
+      border-bottom: 1px solid var(--ln)
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.02em
+    }
+
+    .brand span {
+      background: linear-gradient(135deg, var(--ga), #7c5cff);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      flex: 1;
+      scrollbar-width: none
+    }
+
+    nav a {
+      padding: 7px 14px;
+      border-radius: 99px;
+      color: var(--mu);
+      text-decoration: none;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background .3s, color .3s;
+      font-size: 14px
+    }
+
+    nav a.on {
+      background: linear-gradient(90deg, var(--ga), #7c5cff, var(--mba));
+      color: #fff
+    }
+
+    button {
+      font: 600 14px 'Bricolage Grotesque', sans-serif;
+      background: linear-gradient(110deg, var(--ga), #7c5cff 55%, #c026d3);
+      color: #fff;
+      border: 0;
+      border-radius: 10px;
+      padding: 9px 18px;
+      cursor: pointer;
+      transition: transform .15s, filter .2s
+    }
+
+    button:hover {
+      filter: brightness(1.12) saturate(1.2)
+    }
+
+    button:active {
+      transform: scale(.95)
+    }
+
+    button.alt {
+      background: var(--cd);
+      color: var(--fg);
+      border: 2px solid var(--ln)
+    }
+
+    button.alt.on {
+      background: linear-gradient(110deg, var(--ga), #7c5cff);
+      color: #fff;
+      border-color: transparent
+    }
+
+    main {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 32px clamp(16px, 4vw, 40px) 110px
+    }
+
+    .pg {
+      display: none
+    }
+
+    .pg.on {
+      display: block;
+      animation: in .35s
+    }
+
+    @keyframes in {
+      from {
+        opacity: 0
+      }
+    }
+
+    h2 {
+      font: 800 clamp(28px, 4.6vw, 44px)/1.1 'Bricolage Grotesque';
+      margin: 0 0 10px;
+      letter-spacing: -.02em;
+      background: linear-gradient(100deg, var(--fg) 25%, var(--ga) 60%, #7c5cff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent
+    }
+
+    h2.tg {
+      background-image: linear-gradient(100deg, var(--ga), #3b82f6 60%, #7c5cff);
+      color: transparent
+    }
+
+    h2.tm {
+      background-image: linear-gradient(100deg, var(--mba), #ef4565 70%, #c026d3);
+      color: transparent
+    }
+
+    h3 {
+      font: 700 18px 'Bricolage Grotesque';
+      margin: 28px 0 10px
+    }
+
+    .tg {
+      color: var(--ga)
+    }
+
+    .tm {
+      color: var(--mba)
+    }
+
+    .lead {
+      color: var(--mu);
+      max-width: 680px;
+      font-size: 17px
+    }
+
+    /* Hero card identical to ga-vs-mba.html */
+    .hero {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--ga) 24%, var(--pn)), var(--pn) 48%, color-mix(in srgb, var(--mba) 24%, var(--pn)));
+      border: 1px solid var(--ln);
+      margin-bottom: 24px;
+      box-shadow: 0 20px 60px -20px color-mix(in srgb, #7c5cff 50%, transparent)
+    }
+
+    .hero canvas {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      display: block
+    }
+
+    .hero .tx {
+      position: absolute;
+      z-index: 3;
+      left: clamp(16px, 4vw, 40px);
+      top: 50%;
+      transform: translateY(-50%);
+      max-width: min(580px, 60%)
+    }
+
+    .hero h2 {
+      font-size: clamp(26px, 5vw, 50px);
+      margin: 0 0 8px
+    }
+
+    .hero .lead {
+      margin: 0;
+      font-size: 15px
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 16px 0
+    }
+
+    .c {
+      background: var(--pn);
+      border: 1px solid var(--ln);
+      border-radius: 16px;
+      padding: 18px;
+      transition: border-color .3s, box-shadow .3s, background .3s
+    }
+
+    .c b {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px
+    }
+
+    .c.g {
+      border-left: 5px solid var(--ga);
+      background: linear-gradient(120deg, color-mix(in srgb, var(--ga) 14%, var(--pn)), var(--pn) 70%)
+    }
+
+    .c.m {
+      border-left: 5px solid var(--mba);
+      background: linear-gradient(120deg, color-mix(in srgb, var(--mba) 14%, var(--pn)), var(--pn) 70%)
+    }
+
+    .c.b {
+      border-left: 5px solid #7c5cff;
+      background: linear-gradient(120deg, color-mix(in srgb, #7c5cff 14%, var(--pn)), var(--pn) 70%)
+    }
+
+    .c.s {
+      border-left: 5px solid #10b981;
+      background: linear-gradient(120deg, color-mix(in srgb, #10b981 14%, var(--pn)), var(--pn) 70%)
+    }
+
+    .tl {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin: 16px 0
+    }
+
+    .t {
+      background: linear-gradient(135deg, var(--pn), color-mix(in srgb, #7c5cff 14%, var(--pn)));
+      border: 1px solid var(--ln);
+      border-radius: 14px;
+      padding: 14px
+    }
+
+    .t small {
+      color: var(--mu);
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .t b {
+      font: 700 24px 'JetBrains Mono', monospace;
+      color: var(--fg)
+    }
+
+    .badge-ok {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font: 700 12px 'JetBrains Mono', monospace
+    }
+
+    .badge-ok::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981
+    }
+
+    .sc {
+      overflow-x: auto
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: var(--pn);
+      font-size: 14px;
+      border: 1px solid var(--ln);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 16px 0
+    }
+
+    th,
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--ln);
+      text-align: left;
+      vertical-align: top
+    }
+
+    th {
+      background: var(--cd);
+      font: 700 12px 'JetBrains Mono', monospace;
+      color: var(--mu);
+      text-transform: uppercase
+    }
+
+    td.n {
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right
+    }
+
+    tbody tr:hover {
+      background: var(--cd)
+    }
+
+    pre {
+      background: var(--cd);
+      border: 1px solid var(--ln);
+      border-radius: 14px;
+      padding: 16px;
+      overflow-x: auto;
+      font: 13px/1.55 'JetBrains Mono', monospace;
+      margin: 14px 0
+    }
+
+    .log-box {
+      max-height: 420px;
+      overflow-y: auto;
+      background: #060b0e;
+      color: #8aa3a0;
+      border: 1px solid var(--ln);
+      padding: 14px;
+      border-radius: 14px;
+      font: 12px/1.6 'JetBrains Mono', monospace
+    }
+
+    .log-box .hl {
+      color: var(--ga);
+      font-weight: 600
+    }
+
+    .log-box .en {
+      color: #7c5cff
+    }
+
+    .log-box .ok {
+      color: #10b981;
+      font-weight: 700
+    }
+
+    .log-box .wr {
+      color: var(--mba)
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0
+    }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 99px;
+      background: var(--cd);
+      font: 13px 'JetBrains Mono', monospace;
+      border: 1px solid var(--ln)
+    }
+
+    .chip.ok {
+      background: color-mix(in srgb, var(--ga) 20%, var(--cd));
+      border-color: var(--ga)
+    }
+
+    .f {
+      background: var(--cd);
+      border-left: 4px solid var(--ac);
+      padding: 10px 14px;
+      border-radius: 0 10px 10px 0;
+      margin: 10px 0;
+      font: 13px 'JetBrains Mono', monospace;
+      overflow-x: auto
+    }
+
+    .dash-img-wrap {
+      background: var(--pn);
+      border: 1px solid var(--ln);
+      border-radius: 20px;
+      padding: 18px;
+      margin: 20px 0;
+      text-align: center;
+      box-shadow: 0 10px 40px -15px rgba(0, 0, 0, .15)
+    }
+
+    .dash-img-wrap img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--ln);
+      display: block;
+      margin: 0 auto
+    }
+
+    .dash-cap {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--mu);
+      text-align: left
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 10px calc(10px + env(safe-area-inset-bottom, 0px));
+      z-index: 20;
+      pointer-events: none
+    }
+
+    footer>* {
+      pointer-events: auto
+    }
+
+    footer span {
+      font: 600 12px 'JetBrains Mono', monospace;
+      color: var(--mu);
+      background: var(--pn);
+      padding: 9px 14px;
+      border-radius: 99px;
+      border: 1px solid var(--ln)
+    }
+
+    @media(max-width:760px) {
+      .hero .tx {
+        max-width: 92%;
+        top: 52%
+      }
+
+      .hero canvas {
+        opacity: .3
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="pr"></div>
+
+  <header>
+    <a href="simulasi.html" class="brand"><span>SIMULASI</span> CloudSim Plus</a>
+    <nav id="nav"></nav>
+    <button class="alt" id="th" title="Ganti tema">◐</button>
+  </header>
+
+  <main>
+
+    <!-- SLIDE 1: RINGKASAN RUN SIMULASI -->
+    <section class="pg" id="ringkasan" data-t="Ringkasan Run">
+      <div class="hero">
+        <canvas id="c_hero" width="1000" height="340"></canvas>
+        <div class="tx">
+          <h2>Keberhasilan Run Simulator CloudSim Plus</h2>
+          <p class="lead">Seluruh entitas cloud (1 Datacenter, 4 Host fisik heterogen, 8 VM heterogen) berhasil
+            diinisialisasi dan mengeksekusi 100 hingga 1000 task Google Cluster Trace dengan status 100% SUKSES.</p>
+        </div>
+      </div>
+
+      <div class="tl">
+        <div class="t"><small>Status Eksekusi</small><b style="color:#10b981">100% SUKSES</b></div>
+        <div class="t"><small>Datacenter</small><b>1 Simple DC</b></div>
+        <div class="t"><small>Host Fisik</small><b>4 Host</b></div>
+        <div class="t"><small>Virtual Machine</small><b>8 VM</b></div>
+        <div class="t"><small>Workload Selesai</small><b>1000 Task</b></div>
+      </div>
+
+      <p class="lead">Simulasi penjadwalan task komputasi awan berbasis CloudSim Plus dirancang untuk menyelesaikan
+        masalah pemetaan multi-task ke multi-VM secara deterministik dan optimal menggunakan metaheuristik.</p>
+
+      <div class="cards">
+        <div class="c s">
+          <b style="color:#10b981">Infrastruktur Terisolasi</b>
+          Pemisahan modul Maven mandiri antara GA (CloudSim Plus 7.3.3) dan MBA (CloudSim Plus 8.0.0) mencegah konflik
+          classpath dan memastikan eksekusi murni.
+        </div>
+        <div class="c g">
+          <b class="tg">Heterogenitas Realistis</b>
+          Host dan VM memiliki kombinasi CPU MIPS (1000–2500 MIPS) dan RAM (4–16 GB) yang bervariasi, mensimulasikan
+          lingkungan cloud compute cluster sebenarnya.
+        </div>
+        <div class="c m">
+          <b class="tm">Evaluasi Skalabilitas</b>
+          Pengujian diekspansi dari 100 hingga 1000 task (Google Cluster Trace), mencakup perhitungan Makespan, Konsumsi
+          Energi, Utilisasi VM, dan Throughput.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: PEMBUATAN HOST FISIK -->
+    <section class="pg" id="host" data-t="Pembuat Host">
+      <h2>Spesifikasi & Keberhasilan Pembuat Host</h2>
+      <p class="lead">Host fisik dibuat di dalam <code>DatacenterSimple1</code> dengan arsitektur heterogen untuk
+        menguji kemampuan scheduler dalam menyeimbangkan beban multi-core.</p>
+
+      <div class="cards">
+        <div class="c g">
+          <b><span class="badge-ok">HOST 0 · ACTIVE</span> High-Compute Node</b>
+          <div class="f">16 PE × 10.000 MIPS · 32 GB RAM · 10 Gbps BW · 1 TB Storage</div>
+          Menampung beban intensif. Terpasang VM 0 (2 PE) dan VM 4 (4 PE) dengan Round-Robin policy.
+        </div>
+        <div class="c g">
+          <b><span class="badge-ok">HOST 1 · ACTIVE</span> Compute Node</b>
+          <div class="f">16 PE × 8.000 MIPS · 32 GB RAM · 10 Gbps BW · 1 TB Storage</div>
+          Menampung VM 1 (2 PE) dan VM 5 (4 PE). Kapasitas total 128.000 MIPS.
+        </div>
+        <div class="c m">
+          <b><span class="badge-ok">HOST 2 · ACTIVE</span> Standard Balanced Node</b>
+          <div class="f">8 PE × 6.000 MIPS · 16 GB RAM · 10 Gbps BW · 500 GB Storage</div>
+          Menampung VM 2 (4 PE) dan VM 6 (8 PE high-capacity).
+        </div>
+        <div class="c m">
+          <b><span class="badge-ok">HOST 3 · ACTIVE</span> General Purpose Node</b>
+          <div class="f">8 PE × 4.000 MIPS · 16 GB RAM · 10 Gbps BW · 500 GB Storage</div>
+          Menampung VM 3 (4 PE) dan VM 7 (8 PE). Kapasitas total 32.000 MIPS.
+        </div>
+      </div>
+
+      <h3>Alokasi Core Fisik (Total 48 PE Fisik melayani 36 PE Virtual)</h3>
+      <div class="chips">
+        <span class="chip ok">Host 0: 6/16 Core (37.5%)</span>
+        <span class="chip ok">Host 1: 6/16 Core (37.5%)</span>
+        <span class="chip ok">Host 2: 12/8 Core (Overcommitted)</span>
+        <span class="chip ok">Host 3: 12/8 Core (Overcommitted)</span>
+      </div>
+      <div class="f">Total Kapasitas Datacenter : 368.000 MIPS · 96 GB RAM · 3 TB Disk Storage</div>
+    </section>
+
+    <!-- SLIDE 3: PEMBUATAN VIRTUAL MACHINE -->
+    <section class="pg" id="vm" data-t="Pembuat VM">
+      <h2>Katalog & Alokasi 8 Virtual Machine</h2>
+      <p class="lead">Setiap VM dibuat oleh <code>DatacenterBrokerSimple</code> dan dialokasikan ke Host fisik
+        menggunakan kebijakan <code>VmAllocationPolicyRoundRobin</code>.</p>
+
+      <div class="sc">
+        <table>
+          <thead>
+            <tr>
+              <th>VM ID</th>
+              <th>Host Fisik</th>
+              <th>Core (PE)</th>
+              <th>MIPS / PE</th>
+              <th>Total MIPS</th>
+              <th>RAM</th>
+              <th>Bandwidth</th>
+              <th>Status Alokasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b class="tg">VM 0</b></td>
+              <td>Host 0 / DC 1</td>
+              <td>2 PE</td>
+              <td>1.000</td>
+              <td>2.000 MIPS</td>
+              <td>4.096 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tg">VM 1</b></td>
+              <td>Host 1 / DC 1</td>
+              <td>2 PE</td>
+              <td>1.000</td>
+              <td>2.000 MIPS</td>
+              <td>4.096 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tg">VM 2</b></td>
+              <td>Host 2 / DC 1</td>
+              <td>4 PE</td>
+              <td>1.500</td>
+              <td>6.000 MIPS</td>
+              <td>8.192 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tg">VM 3</b></td>
+              <td>Host 3 / DC 1</td>
+              <td>4 PE</td>
+              <td>1.500</td>
+              <td>6.000 MIPS</td>
+              <td>8.192 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tm">VM 4</b></td>
+              <td>Host 0 / DC 1</td>
+              <td>4 PE</td>
+              <td>2.000</td>
+              <td>8.000 MIPS</td>
+              <td>8.192 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tm">VM 5</b></td>
+              <td>Host 1 / DC 1</td>
+              <td>4 PE</td>
+              <td>2.000</td>
+              <td>8.000 MIPS</td>
+              <td>8.192 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tm">VM 6</b></td>
+              <td>Host 2 / DC 1</td>
+              <td>8 PE</td>
+              <td>2.500</td>
+              <td>20.000 MIPS</td>
+              <td>16.384 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+            <tr>
+              <td><b class="tm">VM 7</b></td>
+              <td>Host 3 / DC 1</td>
+              <td>8 PE</td>
+              <td>2.500</td>
+              <td>20.000 MIPS</td>
+              <td>16.384 MB</td>
+              <td>1 Gbps</td>
+              <td><span class="badge-ok">Allocated (Success)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Potongan Kode Pembuatan VM (Java CloudSim Plus)</h3>
+      <pre><code>Vm vm = new VmSimple(vmId, mips, pesNumber)
+    .setRam(ramMB)
+    .setBw(1000)
+    .setSize(10000)
+    .setCloudletScheduler(new CloudletSchedulerTimeShared());
+vmList.add(vm);
+broker.submitVmList(vmList);</code></pre>
+    </section>
+
+    <!-- SLIDE 4: LOG TERMINAL KEBERHASILAN RUN -->
+    <section class="pg" id="log" data-t="Log Eksekusi">
+      <h2>Bukti Konsol Eksekusi & Log Simulasi</h2>
+      <p class="lead">Cuplikan output log aktual CloudSim Plus dari saat engine boot, alokasi VM ke Host, pengiriman
+        cloudlet, hingga penyelesaian task ke VM.</p>
+
+      <div class="log-box">
+        <div>[0.00] <span class="hl">INFO:</span> Initializing DatacenterSimple1 (4 Heterogeneous Hosts, 48 Physical
+          PEs)...</div>
+        <div>[0.00] <span class="hl">INFO:</span> DatacenterBrokerSimple2 is starting... Broker registered.</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 0 has been allocated to Host 0/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 1 has been allocated to Host 1/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 2 has been allocated to Host 2/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 3 has been allocated to Host 3/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 4 has been allocated to Host 0/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 5 has been allocated to Host 1/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 6 has been allocated to Host 2/DC 1</div>
+        <div>[0.00] <span class="en">VmAllocationPolicyRoundRobin:</span> Vm 7 has been allocated to Host 3/DC 1</div>
+        <div>[0.10] <span class="hl">DatacenterBrokerSimple2:</span> Applying metaheuristic schedule (GA/MBA mapping to
+          target VMs)...</div>
+        <div>[0.10] Sending Cloudlet 0 -> VM 5 (Host 1/DC 1) [Length: 25000 MI]</div>
+        <div>[0.10] Sending Cloudlet 1 -> VM 7 (Host 3/DC 1) [Length: 45000 MI]</div>
+        <div>[0.10] Sending Cloudlet 2 -> VM 2 (Host 2/DC 1) [Length: 12000 MI]</div>
+        <div>[0.10] Sending Cloudlet 3 -> VM 3 (Host 3/DC 1) [Length: 30000 MI]</div>
+        <div>...</div>
+        <div>[0.10] Sending Cloudlet 999 -> VM 6 (Host 2/DC 1) [Length: 28000 MI]</div>
+        <div>[723.21] <span class="ok">SUCCESS:</span> All 1000 Cloudlets finished execution!</div>
+        <div>[723.21] <span class="ok">RESULTS SAVED:</span> metrics.txt, fcfs_metrics.txt, mapping.csv generated.</div>
+        <div>[723.21] <span class="hl">SIMULATION SHUTDOWN:</span> CloudSim Plus execution terminated cleanly with 0
+          errors.</div>
+      </div>
+
+      <h3>Komponen Utama Bukti Eksekusi</h3>
+      <div class="cards">
+        <div class="c b">
+          <b>Cloudlet Status: SUCCESS</b>
+          Tidak ada task yang dibatalkan (*dropped*) atau gagal memenuhi kebutuhan RAM/PE.
+        </div>
+        <div class="c g">
+          <b>Host Resource Sharing</b>
+          Time-Shared CPU Scheduler menjamin multi-tasking berjalan adil pada VM multi-core.
+        </div>
+        <div class="c m">
+          <b>Verifikasi Output File</b>
+          Metrik otomatis tersimpan ke <code>results/metrics.txt</code> dan <code>results/scalability_runs.csv</code>.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: GRAFIK HASIL SIMULASI -->
+    <section class="pg" id="grafik" data-t="Grafik Metrik">
+      <h2>Dashboard Visual Skalabilitas (100–1000 Task)</h2>
+      <p class="lead">Visualisasi hasil perbandingan Filled Area Line Chart dengan tema gelap elegan, mencakup Makespan,
+        Konsumsi Energi, Throughput, dan Utilisasi VM.</p>
+
+      <div class="dash-img-wrap">
+        <img src="results/dashboard_ga_vs_fcfs.png" alt="Dashboard GA vs FCFS">
+        <div class="dash-cap">
+          <b style="color:var(--ga)">Gambar 1 · Dashboard Evaluasi GA vs FCFS (CloudSim Plus 7.3.3):</b> Menunjukkan
+          efisiensi Makespan GA yang semakin membaik saat task mencapai 1000 (selisih terhadap FCFS menyusut menjadi
+          -29%), serta throughput yang meningkat hingga 1,39 task/s.
+        </div>
+      </div>
+
+      <div class="dash-img-wrap">
+        <img src="results/dashboard_mba_vs_fcfs.png" alt="Dashboard MBA vs FCFS">
+        <div class="dash-cap">
+          <b style="color:var(--mba)">Gambar 2 · Dashboard Evaluasi MBA vs FCFS Baseline (CloudSim Plus 8.0.0):</b>
+          Menggambarkan konsistensi utilisasi 100% pada algoritma kawanan kelelawar, serta keunggulan Makespan 64% pada
+          100 task awal.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <button class="alt" id="pv" aria-label="Sebelumnya">←</button>
+    <span id="pc">1 / 5</span>
+    <button class="alt" id="nx" aria-label="Berikutnya">→</button>
+  </footer>
+
+  <script>
+    const $ = s => document.querySelector(s), $$ = s => document.querySelectorAll(s);
+    const col = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const PG = [...$$('.pg')].map(p => p.id); let cur = 0;
+
+    $('#nav').innerHTML = [...$$('.pg')].map(p => `<a href="#${p.id}">${p.dataset.t}</a>`).join('');
+
+    const go = d => { location.hash = PG[Math.min(PG.length - 1, Math.max(0, cur + d))] };
+    function route() {
+      let h = location.hash.slice(1);
+      if (!PG.includes(h)) h = PG[0];
+      cur = PG.indexOf(h);
+      $$('.pg').forEach(p => p.classList.toggle('on', p.id === h));
+      $$('#nav a').forEach(a => {
+        const on = a.getAttribute('href') === '#' + h;
+        a.classList.toggle('on', on);
+        if (on) a.scrollIntoView({ inline: 'center', block: 'nearest' });
+      });
+      $('#pr').style.width = (cur + 1) / PG.length * 100 + '%';
+      $('#pc').textContent = (cur + 1) + ' / ' + PG.length;
+      scrollTo(0, 0);
+    }
+
+    addEventListener('hashchange', route);
+    $('#pv').onclick = () => go(-1);
+    $('#nx').onclick = () => go(1);
+    addEventListener('keydown', e => {
+      if (/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') go(1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(-1);
+    });
+
+    $('#th').onclick = () => {
+      const d = document.documentElement,
+        dk = d.dataset.theme ? d.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme:dark)').matches;
+      d.dataset.theme = dk ? 'light' : 'dark';
+    };
+
+    /* Canvas Animasi Datacenter Topology */
+    function initHeroCanvas() {
+      const cv = $('#c_hero'); if (!cv) return;
+      const c = cv.getContext('2d'), W = cv.width, H = cv.height; let t = 0;
+
+      (function frame() {
+        requestAnimationFrame(frame);
+        if (!$('#ringkasan').classList.contains('on')) return;
+        c.clearRect(0, 0, W, H);
+        const cg = col('--ga') || '#36d6bd', cm = col('--mba') || '#ffb02e', ln = col('--ln') || '#21393c', fg = col('--fg') || '#fff';
+
+        // Draw 4 physical Host racks on the right
+        const hostX = 720, hostYStart = 40;
+        for (let i = 0; i < 4; i++) {
+          const hy = hostYStart + i * 68;
+          c.fillStyle = ln; c.fillRect(hostX, hy, 240, 54);
+          c.fillStyle = i < 2 ? cg : cm; c.fillRect(hostX, hy, 6, 54);
+          c.fillStyle = fg; c.font = '700 13px monospace';
+          c.fillText(`HOST ${i} [${i < 2 ? '16 PE' : '8 PE'}]`, hostX + 14, hy + 22);
+          c.font = '11px monospace'; c.fillStyle = col('--mu');
+          c.fillText(`VM${i * 2} & VM${i * 2 + 1} Active`, hostX + 14, hy + 40);
+
+          // glowing status LED
+          c.fillStyle = '#10b981'; c.beginPath(); c.arc(hostX + 220, hy + 20, 4, 0, 7); c.fill();
+        }
+
+        // Datacenter Controller Box on Center-Left
+        const dcX = 560, dcY = 135;
+        c.fillStyle = ln; c.fillRect(dcX, dcY, 90, 70);
+        c.fillStyle = '#7c5cff'; c.fillRect(dcX, dcY, 90, 4);
+        c.fillStyle = fg; c.font = '700 11px monospace'; c.fillText('CLOUDSIM', dcX + 12, dcY + 30);
+        c.font = '10px monospace'; c.fillStyle = col('--mu'); c.fillText('BROKER', dcX + 20, dcY + 48);
+
+        // Transmission Lines with moving packets
+        for (let i = 0; i < 4; i++) {
+          const hy = hostYStart + i * 68 + 27;
+          c.strokeStyle = ln; c.lineWidth = 1.5; c.setLineDash([4, 4]);
+          c.beginPath(); c.moveTo(dcX + 90, dcY + 35); c.lineTo(hostX, hy); c.stroke();
+          c.setLineDash([]);
+
+          // Moving packet
+          const progress = (t * 0.015 + i * 0.25) % 1;
+          const px = (dcX + 90) + (hostX - (dcX + 90)) * progress;
+          const py = (dcY + 35) + (hy - (dcY + 35)) * progress;
+          c.fillStyle = i < 2 ? cg : cm; c.beginPath(); c.arc(px, py, 3.5, 0, 7); c.fill();
+        }
+        t++;
+      })();
+    }
+
+    route();
+    initHeroCanvas();
+  </script>
+</body>
+
+</html>
