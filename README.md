@@ -144,16 +144,28 @@ Java masing-masing.
 
 ## Persyaratan dan Cara Menjalankan
 
-- JDK 25 LTS atau lebih baru
+- JDK 17 atau lebih baru
 - Apache Maven 3.6 atau lebih baru
 - Bash, Git Bash, atau WSL
 - Python 3.8+ dan `requirements.txt` hanya untuk eksperimen skalabilitas MBA
 
-Jalankan kedua algoritma dan FCFS baseline dari root:
+Jalankan semua mode dari root:
 
 ```bash
 bash run.sh
+bash run.sh all
+bash run.sh ga
+bash run.sh mba
+bash run.sh mba-ga
 ```
+
+Keterangan mode:
+
+- `bash run.sh ga`: menjalankan **GA + FCFS** pada project `cloudsim-plus-ga`;
+- `bash run.sh mba`: menjalankan **MBA + FCFS** pada project `cloudsim-plus-mba`;
+- `bash run.sh mba-ga`: menjalankan **GA dan MBA** melalui modul gabungan
+  `cloudsim-plus-mba-ga` tanpa menjalankan FCFS otomatis;
+- `bash run.sh all`: menjalankan ketiga mode secara berurutan.
 
 Perintah manual:
 
@@ -165,6 +177,9 @@ mvn exec:java -Dexec.args=fcfs
 cd ../cloudsim-plus-mba
 mvn clean compile exec:java
 mvn exec:java -Dexec.args=fcfs
+
+cd ../cloudsim-plus-mba-ga
+mvn clean compile exec:java
 ```
 
 Metrik utama tersimpan di:
@@ -173,6 +188,9 @@ Metrik utama tersimpan di:
 - [`cloudsim-plus-ga/results/fcfs_metrics.txt`](cloudsim-plus-ga/results/fcfs_metrics.txt)
 - [`cloudsim-plus-mba/results/metrics.txt`](cloudsim-plus-mba/results/metrics.txt)
 - [`cloudsim-plus-mba/results/fcfs_metrics.txt`](cloudsim-plus-mba/results/fcfs_metrics.txt)
+- [`cloudsim-plus-mba-ga/results/ga_metrics.txt`](cloudsim-plus-mba-ga/results/ga_metrics.txt)
+- [`cloudsim-plus-mba-ga/results/mba_metrics.txt`](cloudsim-plus-mba-ga/results/mba_metrics.txt)
+- [`cloudsim-plus-mba-ga/results/comparison.csv`](cloudsim-plus-mba-ga/results/comparison.csv)
 
 ## Hasil Eksperimen
 

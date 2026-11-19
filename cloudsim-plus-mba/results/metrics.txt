@@ -2,7 +2,7 @@
  MBA Cloud Task Scheduling — Performance Metrics
 =================================================
 Tasks Completed : 1000
-Makespan        : 1960753724312,7349 s
-Total Energy    : 4392088342460527,0000 J
-Avg VM Util.    : 100,00 %
-Throughput      : 5,100079564304e-10 tasks/s
+Makespan        : 1960753724312.7349 s
+Total Energy    : 4392088342460527.0000 J
+Avg VM Util.    : 100.00 %
+Throughput      : 5.100079564304e-10 tasks/s

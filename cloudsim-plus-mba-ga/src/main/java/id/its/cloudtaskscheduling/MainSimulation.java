@@ -1,7 +1,9 @@
 package id.its.cloudtaskscheduling;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Runs both schedulers from one combined entry point.
@@ -20,6 +22,7 @@ public final class MainSimulation {
         System.out.println("=================================================");
         runScheduler("GENETIC ALGORITHM", Path.of("../cloudsim-plus-ga"));
         runScheduler("MODIFIED BAT ALGORITHM", Path.of("../cloudsim-plus-mba"));
+        saveCombinedResults();
     }
 
     private static void runScheduler(String label, Path projectDirectory) {
@@ -41,6 +44,37 @@ public final class MainSimulation {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(label + " was interrupted", e);
+        }
+    }
+
+    private static void saveCombinedResults() {
+        Path combinedResults = Path.of("results");
+        try {
+            Files.createDirectories(combinedResults);
+            copyIfExists(
+                    Path.of("../cloudsim-plus-ga/results/metrics.txt"),
+                    combinedResults.resolve("ga_metrics.txt"));
+            copyIfExists(
+                    Path.of("../cloudsim-plus-ga/results/ga_mapping.csv"),
+                    combinedResults.resolve("ga_mapping.csv"));
+            copyIfExists(
+                    Path.of("../cloudsim-plus-mba/results/metrics.txt"),
+                    combinedResults.resolve("mba_metrics.txt"));
+            copyIfExists(
+                    Path.of("../cloudsim-plus-mba/results/mba_mapping.csv"),
+                    combinedResults.resolve("mba_mapping.csv"));
+            System.out.printf("%n[INFO] Combined results saved to %s%n",
+                    combinedResults.toAbsolutePath());
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Could not save combined GA/MBA results", e);
+        }
+    }
+
+    private static void copyIfExists(Path source, Path destination)
+            throws IOException {
+        if (Files.isRegularFile(source)) {
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 }
