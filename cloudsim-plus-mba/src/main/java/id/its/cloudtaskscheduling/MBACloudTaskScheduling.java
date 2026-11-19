@@ -129,6 +129,7 @@ public class MBACloudTaskScheduling {
        ========================================================= */
 
     public static void main(String[] args) {
+        org.cloudsimplus.util.Log.setLevel(ch.qos.logback.classic.Level.ERROR);
 
         /* Allow running the baseline FCFS comparison with: java ... fcfs */
         if (args.length > 0 && "fcfs".equalsIgnoreCase(args[0])) {
@@ -377,8 +378,21 @@ public class MBACloudTaskScheduling {
             broker     = new DatacenterBrokerSimple(simulation);
             vmList     = createVms();
 
-            /* FCFS: tasks in original order, no pre-sort */
+            /* FCFS: tasks in original order, assigned round-robin to feasible VMs */
             cloudletList = createCloudlets(taskDataList, false);
+
+            int nextVm = 0;
+            for (int i = 0; i < cloudletList.size(); i++) {
+                Cloudlet cl = cloudletList.get(i);
+                for (int offset = 0; offset < vmList.size(); offset++) {
+                    int vmIdx = (nextVm + offset) % vmList.size();
+                    if (vmList.get(vmIdx).getPesNumber() >= cl.getPesNumber()) {
+                        cl.setVm(vmList.get(vmIdx));
+                        nextVm = (vmIdx + 1) % vmList.size();
+                        break;
+                    }
+                }
+            }
 
             broker.submitVmList(vmList);
             broker.submitCloudletList(cloudletList);

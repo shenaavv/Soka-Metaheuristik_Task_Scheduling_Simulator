@@ -18,6 +18,22 @@ except ModuleNotFoundError:
 ROOT = Path(__file__).resolve().parent
 SIZES = range(100, 1001, 100)
 
+# Locate mvn: prefer a local maven-install bundled in the project root,
+# then fall back to whatever is on PATH.
+def _find_mvn() -> str:
+    local = ROOT / "maven-install"
+    if local.is_dir():
+        for candidate in sorted(local.iterdir()):
+            mvn_cmd = candidate / "bin" / "mvn.cmd"
+            mvn_sh  = candidate / "bin" / "mvn"
+            if mvn_cmd.exists():
+                return str(mvn_cmd)
+            if mvn_sh.exists():
+                return str(mvn_sh)
+    return "mvn"
+
+MVN = _find_mvn()
+
 
 def read_tasks(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8") as handle:
@@ -44,7 +60,7 @@ def prepare_datasets() -> None:
 
 
 def parse_metric(path: Path, label: str) -> float:
-    text = path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8", errors="replace")
     match = re.search(rf"^{re.escape(label)}\s*:?\s*([0-9.Ee+-]+)", text, re.MULTILINE)
     if not match:
         raise RuntimeError(f"Could not parse {label!r} from {path}")
@@ -52,6 +68,7 @@ def parse_metric(path: Path, label: str) -> float:
 
 
 def run_java(project: str, algorithm: str, dataset: Path) -> dict[str, float]:
+    import os
     project_dir = ROOT / project
     active = project_dir / "dataset/tasks.csv"
     backup = active.with_suffix(".csv.experiment-backup")
@@ -59,18 +76,29 @@ def run_java(project: str, algorithm: str, dataset: Path) -> dict[str, float]:
         backup.unlink()
     shutil.copy2(active, backup)
     shutil.copy2(dataset, active)
+    # Build subprocess env: inherit current env and ensure JAVA_HOME is set
+    sub_env = os.environ.copy()
+    jbr = Path.home() / ".jdks" / "jbr-21.0.11"
+    if jbr.is_dir() and "JAVA_HOME" not in sub_env:
+        sub_env["JAVA_HOME"] = str(jbr)
+    # Also add JAVA_HOME/bin to PATH so mvn can find java
+    java_bin = Path(sub_env.get("JAVA_HOME", "")) / "bin"
+    if java_bin.is_dir():
+        sub_env["PATH"] = str(java_bin) + os.pathsep + sub_env.get("PATH", "")
     try:
         commands = [
-            ["mvn", "-q", "compile", "exec:java"],
-            ["mvn", "-q", "exec:java", "-Dexec.args=fcfs"],
+            [MVN, "-q", "compile", "exec:java"],
+            [MVN, "-q", "exec:java", "-Dexec.args=fcfs"],
         ]
         for command in commands:
             completed = subprocess.run(
                 command, cwd=project_dir, check=False,
-                stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+                encoding="utf-8", errors="replace",
+                env=sub_env,
             )
             if completed.returncode != 0:
-                raise RuntimeError(f"{algorithm} failed for {dataset.name}: {completed.stderr[-2000:]}")
+                raise RuntimeError(f"{algorithm} failed for {dataset.name}: {completed.stdout[-3000:]}")
         metrics = project_dir / "results/metrics.txt"
         fcfs_metrics = project_dir / "results/fcfs_metrics.txt"
         energy_label = "Total Energy" if algorithm == "MBA" else "Energy Consumption"
@@ -177,6 +205,7 @@ def plot_summary(summary: list[dict[str, object]], results_dir: Path) -> None:
         figure.tight_layout()
         figure.savefig(results_dir / filename, dpi=160)
         plt.close(figure)
+        _write_svg_plot(summary, key, ylabel, results_dir / filename.replace(".png", ".svg"))
 
 
 def _write_svg_plot(
